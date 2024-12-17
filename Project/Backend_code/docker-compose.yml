@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile  # Use the Dockerfile for the backend
+    ports:
+      - "8000:8000"  # Expose Flask backend on port 8000
+    volumes:
+      - ./Backend:/app/Backend  # Mount the backend code for easier development
+    environment:
+      - FLASK_ENV=production
+    depends_on:
+      - frontend  # Make sure backend starts after frontend
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile  # Use the same Dockerfile for React build
+    working_dir: /app/Bookings
+    command: npm start  # Run React development server on port 3000
+    ports:
+      - "3000:3000"  # Expose React frontend on port 3000
+    volumes:
+      - ./Bookings:/app/Bookings  # Mount the frontend code for easier development
+    depends_on:
+      - backend  # Make sure frontend starts after backend (optional)
